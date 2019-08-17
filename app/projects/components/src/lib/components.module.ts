@@ -10,6 +10,8 @@ import { ComponentsConfig } from './components-config';
 })
 export class ComponentsModule { 
   static forRoot(config: ComponentsConfig): ModuleWithProviders {
+    console.log('ComponentsModule.forRoot');
+    console.log(config);
     return {
       ngModule: ComponentsModule,
       providers: [
