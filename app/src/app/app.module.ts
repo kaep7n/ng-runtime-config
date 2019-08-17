@@ -3,9 +3,9 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ComponentsModule } from 'projects/components/src/public-api';
-import { ComponentsConfig } from 'projects/components/src/lib/components-config';
+import { ComponentsModule, ComponentsConfig } from 'projects/components/src/public-api';
 import { ConfiguratorService } from './configurator.service';
+import { AuthModule, AuthConfig } from 'projects/auth/src/public-api';
 
 export function configuratorFactory(configurator: ConfiguratorService) {
   return () => {
@@ -13,13 +13,14 @@ export function configuratorFactory(configurator: ConfiguratorService) {
       configurator.load('cfg', 'assets/cfg.json'),
       configurator.load('auth', 'assets/auth.json')
     ]).then((() => {
-      console.log(configurator.configurations);
-      Object.assign(cfg, configurator.configurations['cfg']);
+      configurator.assign('cfg', componentsConfig);
+      configurator.assign('auth', authConfig);
     }))
   }
 }
 
-const cfg: ComponentsConfig = new ComponentsConfig();
+const componentsConfig = new ComponentsConfig();
+const authConfig = new AuthConfig();
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ const cfg: ComponentsConfig = new ComponentsConfig();
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ComponentsModule.forRoot(cfg)
+    AuthModule.forRoot(authConfig),
+    ComponentsModule.forRoot(componentsConfig)
   ],
   providers: [
     { provide: APP_INITIALIZER, multi: true, deps: [ConfiguratorService], useFactory: configuratorFactory }

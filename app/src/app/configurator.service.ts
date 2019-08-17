@@ -6,9 +6,14 @@ import { HttpClient } from '@angular/common/http'
 })
 export class ConfiguratorService {
 
-  configurations: { [id: string]: any; } = {};
+  private configurations: { [id: string]: any; } = {};
 
   constructor(private httpClient: HttpClient) {
+  }
+
+  public assign<T>(id: string, target: T) {
+    var configuration = this.configurations[id];
+    Object.assign(target, configuration);
   }
 
   public load(id: string, path: string): Promise<void> {

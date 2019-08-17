@@ -1,3 +1,3 @@
 export class ComponentsConfig {
-    title: string = 'default';
+    title: string;
 }
