@@ -8,7 +8,7 @@ export class ConfiguratorService {
 
   private configurations: { [id: string]: any; } = {};
 
-  constructor(private httpClient: HttpClient) {
+  constructor() {
   }
 
   public assign<T>(id: string, target: T) {
@@ -16,14 +16,12 @@ export class ConfiguratorService {
     Object.assign(target, configuration);
   }
 
-  public load(id: string, path: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.httpClient.get(path)
-        .subscribe(result => {
-          this.configurations[id] = result;
-          resolve();
-        }, reject);
+  public load(id: string, path: string): Promise<any> {
+    return fetch(path)
+    .then(response => response.json())
+    .then(json => {
+      console.log('fetched ' + path, json);
+      this.configurations[id] = json;
     });
   }
-
 }

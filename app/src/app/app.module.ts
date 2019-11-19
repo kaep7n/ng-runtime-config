@@ -3,24 +3,35 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ComponentsModule, ComponentsConfig } from 'projects/components/src/public-api';
+import { ComponentsModule, ComponentsConfig, COMPONENT_CONFIG } from 'projects/components/src/public-api';
 import { ConfiguratorService } from './configurator.service';
-import { AuthModule, AuthConfig } from 'projects/auth/src/public-api';
+import { AuthModule, AuthConfig, AUTH_CONFIG } from 'projects/auth/src/public-api';
+import { config } from 'rxjs';
 
 export function configuratorFactory(configurator: ConfiguratorService) {
+  console.log('configuratorFactory');
   return () => {
-    Promise.all([
+    console.log('Starting APP_INITIALIZER');
+    return Promise.all([
       configurator.load('cfg', 'assets/cfg.json'),
       configurator.load('auth', 'assets/auth.json')
-    ]).then((() => {
-      configurator.assign('cfg', componentsConfig);
-      configurator.assign('auth', authConfig);
-    }))
+    ]);
   }
 }
 
-const componentsConfig = new ComponentsConfig();
-const authConfig = new AuthConfig();
+export function authConfigFactory(configurator: ConfiguratorService) : AuthConfig {
+  let authConfig = new AuthConfig();
+  configurator.assign('auth', authConfig);
+  console.log('authConfigFactory ' + authConfig.mode);
+  return authConfig;
+}
+
+export function componentConfigFactory(configurator: ConfiguratorService) : ComponentsConfig {
+  let cfg = new ComponentsConfig();
+  configurator.assign('cfg', cfg);
+  console.log('componentConfigFactory ' + cfg.title);
+  return cfg;
+}
 
 @NgModule({
   declarations: [
@@ -30,11 +41,13 @@ const authConfig = new AuthConfig();
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    AuthModule.forRoot(authConfig),
-    ComponentsModule.forRoot(componentsConfig)
+    AuthModule,
+    ComponentsModule
   ],
   providers: [
-    { provide: APP_INITIALIZER, multi: true, deps: [ConfiguratorService], useFactory: configuratorFactory }
+    { provide: APP_INITIALIZER, multi: true, deps: [ConfiguratorService], useFactory: configuratorFactory },
+    { provide: AUTH_CONFIG, deps: [ConfiguratorService], useFactory: authConfigFactory },
+    { provide: COMPONENT_CONFIG, deps: [ConfiguratorService], useFactory: componentConfigFactory }
   ],
   bootstrap: [AppComponent]
 })

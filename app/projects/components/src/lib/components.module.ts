@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core';
 import { TitleComponent } from './title/title.component';
 import { ComponentsConfig } from './components-config';
 

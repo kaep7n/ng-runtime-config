@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, InjectionToken } from '@angular/core';
 import { ComponentsConfig } from '../components-config';
+
+export const COMPONENT_CONFIG = new InjectionToken<string>("COMPONENT_CONFIG");
 
 @Component({
   selector: 'lib-title',
@@ -8,7 +10,7 @@ import { ComponentsConfig } from '../components-config';
 })
 export class TitleComponent implements OnInit {
 
-  constructor(public config: ComponentsConfig) { 
+  constructor(@Inject(COMPONENT_CONFIG) public config: ComponentsConfig) { 
     console.log('TitleComponent');
     console.log(config);
   }
