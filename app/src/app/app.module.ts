@@ -16,7 +16,7 @@ export function configuratorFactory(configurator: ConfiguratorService) {
   return () => {
     console.log('Starting APP_INITIALIZER');
     return Promise.all([
-      configurator.load('cfg', 'assets/cfg.json'),
+      configurator.load('cfg', 'assets/components.json'),
       configurator.load('auth', 'assets/auth.json')
     ]);
   }
