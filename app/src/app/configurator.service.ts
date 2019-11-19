@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
+import { ConfigurationDefinition } from './configurationDefinition';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class ConfiguratorService {
   }
 
   public assign<T>(id: string, target: T) {
-    var configuration = this.configurations[id];
+    const configuration = this.configurations[id];
     Object.assign(target, configuration);
   }
 

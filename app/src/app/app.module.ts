@@ -8,6 +8,9 @@ import { ConfiguratorService } from './configurator.service';
 import { AuthModule, AuthConfig, AUTH_CONFIG } from 'projects/auth/src/public-api';
 import { config } from 'rxjs';
 
+const componentsConfig = new ComponentsConfig();
+const authConfig = new AuthConfig();
+
 export function configuratorFactory(configurator: ConfiguratorService) {
   console.log('configuratorFactory');
   return () => {
